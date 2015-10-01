@@ -2,8 +2,19 @@ package com.cvanbattum.seamtest;
 
 import java.awt.Color;
 
+/**
+ * @version 1.0
+ */
 public class ColorMath {
 
+	/**
+	 * The color difference is the mathematical average of the differences of each of the colors' channels. This means 
+	 * that the difference (as a percentage of a channel's maximum value, 255) is calculated for each channel.
+	 * 
+	 * @param color1 A color
+	 * @param color2 A color
+	 * @return The difference between the two given colors
+	 */
 	public static float getColorDifference(Color color1, Color color2) {
 		float max = 255.0f;
 
@@ -26,12 +37,35 @@ public class ColorMath {
 		return (redDiff + greenDiff + blueDiff) / 3;
 	}
 
+	/**
+	 * <p>The brightness difference is the average of the differences in perceptual brightness off each channel from two 
+	 * colors. The returned value is a float between 1 and 0.</p>
+	 * <p>The formula for the perceptual brightness of a color is: </p>
+	 * <pre>red * 0.2126 + green * 0.7152 + blue * 0.0722</pre>
+	 * 
+	 * @param color1 A color
+	 * @param color2 A color
+	 * @return The difference in perceptual brightness from two colors.
+	 */
 	public static float getBrightnessDifference(Color color1, Color color2) {
-		//Formula: 0.2126*R + 0.7152*G + 0.0722*B (perceptual brightness)
-		
-		
-	}
+		double percBright1 = color1.getRed() * 0.2126 + color1.getGreen() * 0.7152 + color1.getBlue() * 0.0722;
+		double percBright2 = color2.getRed() * 0.2126 + color2.getGreen() * 0.7152 + color2.getBlue() * 0.0722;
 
+		return (float) (Math.abs(percBright1 - percBright2) / 255.0f);
+	}
+	
+	/**
+	 * <p>Simple average color calculation method. The average of the colors is calculated by taking the average of each 
+	 * channel (R, G and B), and then creating the new color with these averages.</p>
+	 * <p>This method supports alpha. When <code>useAlpha</code> is <code>true</code>, the method will also calculate 
+	 * the average of the alpha channels of both colors</p>
+	 * 
+ 	 * @param color1 a color
+	 * @param color2 a color
+	 * @param useAlpha When <code>true</code> is passed, the method will also take into account the alpha channel when 
+	 *                 calculating the average.
+	 * @return The mathematical average of two colors. 
+	 */
 	public static Color getAverageColor(Color color1, Color color2, boolean useAlpha) {
 		int redAvg = getAverage(color1.getRed(), color2.getRed());
 		int greenAvg = getAverage(color1.getGreen(), color2.getGreen());
@@ -58,7 +92,13 @@ public class ColorMath {
 	private static float getDifference(int a, int b, float max) {
 		return Math.abs(a - b) / max;
 	}
-	
+
+	/**
+	 * Calculates the average of a set of numbers.
+	 * 
+	 * @param nums The numbers to calculate the average from
+	 * @return The average of the numbers in the <code>nums</code> array
+	 */
 	private static int getAverage(int... nums) {
 		if (nums.length == 1) {
 			//Return only number in list
