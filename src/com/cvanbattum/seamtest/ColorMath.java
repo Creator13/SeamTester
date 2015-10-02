@@ -56,23 +56,37 @@ public class ColorMath {
 	
 	/**
 	 * <p>Simple average color calculation method. The average of the colors is calculated by taking the average of each 
-	 * channel (R, G and B), and then creating the new color with these averages.</p>
+	 * channel (R, G and B), and then creating the new color from these averages.</p>
 	 * <p>This method supports alpha. When <code>useAlpha</code> is <code>true</code>, the method will also calculate 
 	 * the average of the alpha channels of both colors</p>
 	 * 
- 	 * @param color1 a color
-	 * @param color2 a color
+ 	 * @param colors Any number of colors
 	 * @param useAlpha When <code>true</code> is passed, the method will also take into account the alpha channel when 
 	 *                 calculating the average.
 	 * @return The mathematical average of two colors. 
 	 */
-	public static Color getAverageColor(Color color1, Color color2, boolean useAlpha) {
-		int redAvg = getAverage(color1.getRed(), color2.getRed());
-		int greenAvg = getAverage(color1.getGreen(), color2.getGreen());
-		int blueAvg = getAverage(color1.getBlue(), color2.getBlue());
+	public static Color getAverageColor(boolean useAlpha, Color... colors) {
+		int[] reds = new int[colors.length];
+		int[] greens = new int[colors.length];
+		int[] blues = new int[colors.length];
+		int[] alphas = new int[colors.length];
+		
+		for (int i = 0; i < colors.length; i++) {
+			reds[i] = colors[i].getRed();
+			greens[i] = colors[i].getGreen();
+			blues[i] = colors[i].getBlue();
+			
+			if (useAlpha) {
+				alphas[i] = colors[i].getAlpha();
+			}
+		}
+		
+		int redAvg = getAverage(reds);
+		int greenAvg = getAverage(greens);
+		int blueAvg = getAverage(blues);
 		
 		if (useAlpha) {
-			int alphaAvg = getAverage(color1.getAlpha(), color2.getAlpha());
+			int alphaAvg = getAverage(alphas);
 			return new Color(redAvg, greenAvg, blueAvg, alphaAvg);
 		}
 		
