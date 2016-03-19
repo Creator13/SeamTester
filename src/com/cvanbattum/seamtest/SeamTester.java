@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -27,13 +28,14 @@ public class SeamTester {
 
 				s += "[" + formatMillis(record.getMillis()) + "] [" + record.getLevel() + "] ";
 				s += record.getMessage();
+				s += "\n";
 
 				return s;
 			}
 
 			@Override
 			public String getHead(Handler h) {
-				return "Program started at " + formatMillis(System.currentTimeMillis()) + ".";
+				return "Program started at " + formatMillis(System.currentTimeMillis()) + ".\n";
 			}
 
 			private String formatMillis(long millis) {
@@ -48,10 +50,14 @@ public class SeamTester {
 		try {
 			LOGGER.setUseParentHandlers(false);
 
-			Handler h = new FileHandler(LOG_FILE_LOCATION);
-			h.setFormatter(f);
+			Handler fh = new FileHandler(LOG_FILE_LOCATION, true);
+			fh.setFormatter(f);
+			
+			Handler ch = new ConsoleHandler();
+			ch.setFormatter(f);
 
-			LOGGER.addHandler(h);
+			LOGGER.addHandler(fh);
+			LOGGER.addHandler(ch);
 		}
 		catch (IOException e) {
 			System.err.println("An error occurred while opening log file.");
@@ -69,7 +75,7 @@ public class SeamTester {
 					BufferedImage img = ImageIO.read(f);
 					
 					if (img != null) {
-						testImage(img, 0);
+						testImage(img, 363);
 					}
 					else {
 						printInvalidImage();
@@ -80,11 +86,11 @@ public class SeamTester {
 				}
 			}
 			else {
-				System.out.println("File not found!");
+				LOGGER.severe("File " + args[0] + " not found!");
 			}
 		}
 		else {
-			System.out.println("Only one argument is allowed!");
+			LOGGER.severe("Only one argument is allowed! Please remove any pending arguments.");
 		}
 		
 	}
@@ -92,11 +98,11 @@ public class SeamTester {
 	private static void testImage(BufferedImage img, int seamOffset) {
 		OffsetChecker it = new OffsetChecker(img);
 		
-		it.checkOffset(seamOffset, 3, 3, Orientation.VERTICAL);
+		it.checkOffset(seamOffset, 1, 1, Orientation.HORIZONTAL);
 	}
 	
 	private static void printInvalidImage() {
-		System.out.println("This file is not an image!");
+		LOGGER.severe("This file is not an image!");
 	}
 	
 }
