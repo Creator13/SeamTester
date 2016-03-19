@@ -96,7 +96,7 @@ public class ColorMath {
 	/**
 	 * <p>Calculates the difference between two integers as a percentage of a maximum value. The range is defined by the
 	 * <code>max</code> parameter, and 0 on the low side.</p>
-	 * <p>The percentage is given as a float between 1 and 0.</p>
+	 * <p>The percentage is returned as a float between 1 and 0.</p>
 	 * 
 	 * @param a Value 1
 	 * @param b Value 2
